@@ -1,12 +1,13 @@
-from flask import Flask
-from flask import render_template, request, redirect
-import json
+import os
+
 from dotenv import load_dotenv
+from flask import Flask
 
 load_dotenv()
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
 
+
 @app.route("/")
-def site():
-    pass
+def hello():
+    print("Hello, world!")
