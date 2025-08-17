@@ -8,10 +8,12 @@
         <div class="card-body py-5">
             <h1 class="card-title mt-3 fs-1 fw-light">Анализатор страниц</h1>
             <p class="card-text mt-1 fs-5 fw-lighter">Бесплатно проверяйте сайты на SEO-пригодность</p>
-            <div class="d-flex mb-3">
-                <input type="text" class="form-control me-2" placeholder="https://www.example.com">
-                <button type="button" class="btn-lg btn btn-primary text-uppercase">Проверить</button>
-            </div>
+            <form action="{{ url_for('urls_post') }}" method="post">
+                <div class="d-flex mb-3">
+                    <input type="text" name="url" class="form-control me-2" placeholder="https://www.example.com">
+                    <button type="button" class="btn-lg btn btn-primary text-uppercase">Проверить</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
