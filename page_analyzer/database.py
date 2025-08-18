@@ -1,31 +1,45 @@
-import os
 import psycopg2
 from psycopg2.extras import DictCursor
 
 
-DATABASE_URL = os.getenv('DATABASE_URL')
-conn = psycopg2.connect(DATABASE_URL)
+
 
 class Urls:
-    def __init__(self, conn):
-        self.conn = conn
+    def __init__(self, database_url):
+        self.conn = psycopg2.connect(database_url)
+        
 
-    def _create(self, url):
-        with self.conn.cursor() as cur:
-            cur.execute(
-                "INSERT INTO urls (name, created_at) VALUES (%s) RETURNING id",
-                (url,)
-            )
-        self.conn.commit()
+    def find_url(self, url):
+        query = "SELECT * FROM urls WHERE name = %s"
+        with self.conn.cursor(cursor_factory=DictCursor) as cur:
+            cur.execute(query, (url,))
+            row = cur.fetchone()
+            return dict(row) if row else None
+        
+    def find_id(self, id):
+        query = "SELECT * FROM urls WHERE id = %s"
+        with self.conn.cursor(cursor_factory=DictCursor) as cur:
+            cur.execute(query, (id,))
+            row = cur.fetchone()
+            return dict(row) if row else None
 
     def save(self, url):
-        self._create(url)
-"""
-    def _update(self, url):
-        with self.conn.cursor() as cur:
-            cur.execute(
-                "UPDATE urls SET name = %s, RETURNING id",
-                (url,)
-            )
+        query = """INSERT INTO urls (name, created_at)
+        VALUES (%s, NOW())
+        RETURNING id
+        """
+        with self.conn.cursor(cursor_factory=DictCursor) as cur:
+            cur.execute(query, (url,))
+            id = cur.fetchone()[0]
+            
         self.conn.commit()
-"""
+        print(id)
+        return id
+
+
+    def get_all_urls(self):
+        query = "SELECT * FROM urls ORDER BY id DESC"
+        with self.conn.cursor(cursor_factory=DictCursor) as cur:
+            cur.execute(query)
+            row = cur.fetchall()
+            return row if row else None

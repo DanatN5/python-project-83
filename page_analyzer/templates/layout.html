@@ -15,11 +15,15 @@
             <a class="navbar-brand" href="/">Анализатор страниц</a>
             <div class="collapse navbar-collapse">
                 <ul class="navbar-nav ms-auto">
-                    <li class="nav-item"><a href="/" class="nav-link">Сайты</a></li>
+                    <li class="nav-item"><a href="/urls" class="nav-link">Сайты</a></li>
                 </ul>
             </div>
         </div>
     </nav>
+    {% for category, message in messages %}
+        <div class="alert alert-{{ category }}" role="alert">{{ message }}</div>
+    {% endfor %}
+
 
     <!-- Контент -->
      {% block content %}{% endblock %}
