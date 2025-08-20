@@ -2,13 +2,10 @@ import psycopg2
 from psycopg2.extras import DictCursor
 
 
-
-
 class Urls:
     def __init__(self, database_url):
         self.conn = psycopg2.connect(database_url)
         
-
     def find_url(self, url):
         query = "SELECT * FROM urls WHERE name = %s"
         with self.conn.cursor(cursor_factory=DictCursor) as cur:
@@ -24,7 +21,8 @@ class Urls:
             return dict(row) if row else None
 
     def save(self, url):
-        query = """INSERT INTO urls (name, created_at)
+        query = """
+        INSERT INTO urls (name, created_at)
         VALUES (%s, NOW())
         RETURNING id
         """
@@ -33,9 +31,8 @@ class Urls:
             id = cur.fetchone()[0]
             
         self.conn.commit()
-        print(id)
+        
         return id
-
 
     def get_all_urls(self):
         query = "SELECT * FROM urls ORDER BY id DESC"
@@ -43,3 +40,24 @@ class Urls:
             cur.execute(query)
             row = cur.fetchall()
             return row if row else None
+        
+    def check_url(self, data):
+        query = """
+        INSERT INTO url_checks (url_id, status_code)
+        VALUES (%s, %s)
+        RETURNING id
+        """
+        with self.conn.cursor(cursor_factory=DictCursor) as cur:
+            cur.execute(query, data)
+            id = cur.fetchone()[0]
+            
+        self.conn.commit()
+        print(id)
+        return id
+    
+    def get_check(self, id):
+        query = "SELECT * FROM url_checks WHERE id = %s"
+        with self.conn.cursor(cursor_factory=DictCursor) as cur:
+            cur.execute(query, (id,))
+            row = cur.fetchone()
+            return dict(row) if row else None
