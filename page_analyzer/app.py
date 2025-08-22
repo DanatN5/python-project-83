@@ -1,5 +1,5 @@
 import os
-
+import requests
 import psycopg2
 from dotenv import load_dotenv
 from flask import (
@@ -68,7 +68,8 @@ def url_get(id):
 @app.route("/urls")
 def urls_get():
     urls = Urls(DATABASE_URL)
-    all_urls = urls.get_all_urls()    
+    all_urls = urls.get_all_urls()
+    check = urls.get_check
     messages = get_flashed_messages(with_categories=True)
     return render_template(
         "urls.html",
@@ -80,18 +81,20 @@ def urls_get():
 @app.route("/urls/<int:id>/checks", methods=["POST"])
 def checks_post(id):
     urls = Urls(DATABASE_URL)
-    url = urls.find_id(id)
+    url_info = urls.find_id(id)
     try:
-        response = request.head(url, timeout=5)
-        status_code = response.status_code
-    except Exception:
-        status_code = None
+        response = request.get(url_info.get("name"), timeout=1)
+        response.raise_for_status()
+    except requests.RequestException:
+        flash("Произошла ошибка при проверке", "warning")
+        return redirect(url_for("url_get", id=id))
 
+    status_code = response.status_code
     data = (id, status_code)
     check_id = urls.check_url(data)
     check_info = urls.get_check(check_id)
     return render_template(
         "url.html",
         check_info=check_info,
-        url=url
+        url=url_info
     )

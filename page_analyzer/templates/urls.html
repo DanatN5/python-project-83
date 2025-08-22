@@ -12,8 +12,9 @@
                 <thead>
                     <tr>
                         <td>ID</td>
-                        <td>Название</td>
-                        <td>Добавлен</td>
+                        <td>Имя</td>
+                        <td>Последняя проверка</td>
+                        <td>Код ответа</td>
                     </tr>
                 </thead>
                 
@@ -22,7 +23,8 @@
                     <tr>
                         <td>{{url.id}}</td>
                         <td>{{url.name}}</td>
-                        <td>{{url.created_at}}</td>
+                        <td>{{check.created_at}}</td>
+                        <td>{{check.status_code}}</td>
                     </tr>
                     
                 </tbody>

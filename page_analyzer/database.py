@@ -56,7 +56,7 @@ class Urls:
         return id
     
     def get_check(self, id):
-        query = "SELECT * FROM url_checks WHERE id = %s"
+        query = "SELECT * FROM url_checks WHERE id = %s ORDER BY created_at DESC"
         with self.conn.cursor(cursor_factory=DictCursor) as cur:
             cur.execute(query, (id,))
             row = cur.fetchone()
