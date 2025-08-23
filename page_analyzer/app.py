@@ -72,8 +72,7 @@ def url_get(id):
 @app.route("/urls")
 def urls_get():
     urls = Urls(DATABASE_URL)
-    all_urls = urls.get_all_urls()
-    # check = urls.get_check
+    all_urls = urls.get_all_checked_urls()
     messages = get_flashed_messages(with_categories=True)
     urls.conn.close()
     return render_template(

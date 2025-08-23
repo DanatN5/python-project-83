@@ -63,3 +63,21 @@ class Urls:
             cur.execute(query, (id,))
             row = cur.fetchall()
             return row if row else None
+        
+    def get_all_checked_urls(self):
+        query = """
+        SELECT  DISTINCT ON (u.id)
+        u.id,
+        u.name,
+        c.created_at,
+        c.status_code
+        FROM urls AS u
+        LEFT JOIN url_checks AS c
+        ON u.id=c.url_id
+        ORDER BY u.id, c.created_at DESC;
+        """
+        with self.conn.cursor(cursor_factory=DictCursor) as cur:
+            cur.execute(query)
+            row = cur.fetchall()
+            return row if row else None
+        
