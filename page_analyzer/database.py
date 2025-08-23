@@ -56,9 +56,9 @@ class Urls:
             )
         self.conn.commit()
         
-    
     def get_url_check(self, id):
-        query = "SELECT * FROM url_checks WHERE url_id = %s ORDER BY created_at DESC"
+        query = """SELECT * FROM url_checks 
+        WHERE url_id = %s ORDER BY created_at DESC"""
         with self.conn.cursor(cursor_factory=DictCursor) as cur:
             cur.execute(query, (id,))
             row = cur.fetchall()

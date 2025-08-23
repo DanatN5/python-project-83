@@ -1,5 +1,6 @@
 from bs4 import BeautifulSoup
 
+
 def get_data(response):
     soup = BeautifulSoup(response, 'html.parser')
     h1 = soup.find('h1')

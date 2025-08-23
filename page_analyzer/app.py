@@ -1,6 +1,7 @@
 import os
-import requests
+
 import psycopg2
+import requests
 from dotenv import load_dotenv
 from flask import (
     Flask,
@@ -12,8 +13,8 @@ from flask import (
     url_for,
 )
 
-from page_analyzer.parser import get_data
 from page_analyzer.database import Urls
+from page_analyzer.parser import get_data
 from page_analyzer.validator import normalize, validate
 
 load_dotenv()
@@ -72,7 +73,7 @@ def url_get(id):
 def urls_get():
     urls = Urls(DATABASE_URL)
     all_urls = urls.get_all_urls()
-    check = urls.get_check
+    # check = urls.get_check
     messages = get_flashed_messages(with_categories=True)
     urls.conn.close()
     return render_template(
