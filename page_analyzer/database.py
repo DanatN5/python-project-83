@@ -41,23 +41,25 @@ class Urls:
             row = cur.fetchall()
             return row if row else None
         
-    def check_url(self, data):
+    def add_url_check(self, data):
         query = """
-        INSERT INTO url_checks (url_id, status_code)
-        VALUES (%s, %s)
-        RETURNING id
+        INSERT INTO url_checks (url_id, status_code, h1, title, description)
+        VALUES (%s, %s, %s, %s, %s)
         """
         with self.conn.cursor(cursor_factory=DictCursor) as cur:
-            cur.execute(query, data)
-            id = cur.fetchone()[0]
-            
+            cur.execute(query, (
+                data["url_id"],
+                data["status_code"],
+                data["h1"],
+                data["title"],
+                data["description"],)
+            )
         self.conn.commit()
-        print(id)
-        return id
+        
     
-    def get_check(self, id):
-        query = "SELECT * FROM url_checks WHERE id = %s ORDER BY created_at DESC"
+    def get_url_check(self, id):
+        query = "SELECT * FROM url_checks WHERE url_id = %s ORDER BY created_at DESC"
         with self.conn.cursor(cursor_factory=DictCursor) as cur:
             cur.execute(query, (id,))
-            row = cur.fetchone()
-            return dict(row) if row else None
+            row = cur.fetchall()
+            return row if row else None

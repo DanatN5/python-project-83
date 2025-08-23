@@ -32,7 +32,7 @@
         <form method="post" action="/urls/{{ url.id }}/checks">
         <input type="submit" class="btn btn-primary" value="Запустить проверку">
         </form>
-
+        {% if checks %}
         <div>
             <table class="table table-bordered table-hover mt-2" data-test="checks">
                 <thead>
@@ -45,20 +45,23 @@
                         <th>Дата создания</th>
                     </tr>
                 </thead>
+                {% for check in checks %}
                 <tbody>
         
                     <tr>
-                        <td>{{check_info.url_id}}</td>
-                        <td>{{check_info.status_code}}</td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td>{{check_info.created_at}}</td>
-                </tr>
+                        <td>{{check.id}}</td>
+                        <td>{{check.status_code}}</td>
+                        <td>{{check.h1}}</td>
+                        <td>{{check.title}}</td>
+                        <td>{{check.description}}</td>
+                        <td>{{check.created_at}}</td>
+                    </tr>
         
                 </tbody>
+                {% endfor %}
             </table>
         </div>
+        {% endif %}
     </div>
 </main>
 {% endblock %}

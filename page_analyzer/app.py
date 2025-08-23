@@ -12,6 +12,7 @@ from flask import (
     url_for,
 )
 
+from page_analyzer.parser import get_data
 from page_analyzer.database import Urls
 from page_analyzer.validator import normalize, validate
 
@@ -47,6 +48,7 @@ def urls_post():
         flash("URL успешно добавлен", "success")
         return redirect(url_for("url_get", id=id))
     flash("URL уже существует", "info")
+    urls.conn.close()
     return redirect(url_for("url_get", id=url_info.get("id")))
 
 
@@ -56,6 +58,7 @@ def url_get(id):
     url = urls.find_id(id)
     messages = get_flashed_messages(with_categories=True)
     check_info = None
+    urls.conn.close()
     return render_template(
         "url.html",
         url=url,
@@ -71,6 +74,7 @@ def urls_get():
     all_urls = urls.get_all_urls()
     check = urls.get_check
     messages = get_flashed_messages(with_categories=True)
+    urls.conn.close()
     return render_template(
         "urls.html",
         urls=all_urls,
@@ -83,18 +87,25 @@ def checks_post(id):
     urls = Urls(DATABASE_URL)
     url_info = urls.find_id(id)
     try:
-        response = request.get(url_info.get("name"), timeout=1)
+        response = requests.get(url_info.get("name"), timeout=1)
         response.raise_for_status()
     except requests.RequestException:
         flash("Произошла ошибка при проверке", "warning")
         return redirect(url_for("url_get", id=id))
 
     status_code = response.status_code
-    data = (id, status_code)
-    check_id = urls.check_url(data)
-    check_info = urls.get_check(check_id)
+    print(status_code)
+    parsed_data = get_data(response.text)
+    parsed_data["url_id"] = id
+    parsed_data["status_code"] = status_code
+    
+    urls.add_url_check(parsed_data)
+    flash("Проверка успешно произведена", "success")
+    checks = urls.get_url_check(id)
+    print(checks)
+    urls.conn.close()
     return render_template(
         "url.html",
-        check_info=check_info,
+        checks=checks,
         url=url_info
     )
