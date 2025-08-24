@@ -46,9 +46,9 @@ def urls_post():
     url_info = urls.find_url(normalized_url)
     if url_info is None:
         id = urls.save(normalized_url)
-        flash("URL успешно добавлен", "success")
+        flash("Страница успешно добавлена", "success")
         return redirect(url_for("url_get", id=id))
-    flash("URL уже существует", "info")
+    flash("Страница уже существует", "info")
     urls.conn.close()
     return redirect(url_for("url_get", id=url_info.get("id")))
 
@@ -58,14 +58,13 @@ def url_get(id):
     urls = Urls(DATABASE_URL)
     url = urls.find_id(id)
     messages = get_flashed_messages(with_categories=True)
-    check_info = None
+    checks = urls.get_url_check(id)
     urls.conn.close()
     return render_template(
         "url.html",
         url=url,
         messages=messages,
-        check_info=check_info
-        
+        checks=checks        
     )
 
 
@@ -94,18 +93,11 @@ def checks_post(id):
         return redirect(url_for("url_get", id=id))
 
     status_code = response.status_code
-    print(status_code)
     parsed_data = get_data(response.text)
     parsed_data["url_id"] = id
     parsed_data["status_code"] = status_code
     
     urls.add_url_check(parsed_data)
-    flash("Проверка успешно произведена", "success")
-    checks = urls.get_url_check(id)
-    print(checks)
+    flash("Страница успешно проверена", "success")
     urls.conn.close()
-    return render_template(
-        "url.html",
-        checks=checks,
-        url=url_info
-    )
+    return redirect(url_for("url_get", id=id))

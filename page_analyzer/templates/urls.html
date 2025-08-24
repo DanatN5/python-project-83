@@ -8,8 +8,8 @@
         <h1>Сайты</h1>
 
         <div class="table-responsive">
-            <table class="table table-bordered table-hover text-nowrap" data-test="url">
-                <thead>
+            <table class="table table-bordered table-hover text-nowrap" data-test="urls">
+                <thead style="font-weight: bold;">
                     <tr>
                         <td>ID</td>
                         <td>Имя</td>
@@ -17,7 +17,7 @@
                         <td>Код ответа</td>
                     </tr>
                 </thead>
-                
+                {% if urls %}
                 {% for url in urls %}
                 <tbody>
                     <tr>
@@ -29,6 +29,7 @@
                     
                 </tbody>
                 {% endfor %}
+                {% endif %}
             </table>
         </div>
         

@@ -9,7 +9,7 @@
 
         <div class="table-responsive">
             <table class="table table-bordered table-hover text-nowrap" data-test="url">
-                <tbody>
+                <tbody style="font-weight: bold;">
                     <tr>
                         <td>ID</td>
                         <td>{{url.id}}</td>
@@ -32,7 +32,7 @@
         <form method="post" action="/urls/{{ url.id }}/checks">
         <input type="submit" class="btn btn-primary" value="Запустить проверку">
         </form>
-        {% if checks %}
+        
         <div>
             <table class="table table-bordered table-hover mt-2" data-test="checks">
                 <thead>
@@ -45,6 +45,7 @@
                         <th>Дата создания</th>
                     </tr>
                 </thead>
+                {% if checks %}
                 {% for check in checks %}
                 <tbody>
         
@@ -59,9 +60,10 @@
         
                 </tbody>
                 {% endfor %}
+                {% endif %}
             </table>
         </div>
-        {% endif %}
+        
     </div>
 </main>
 {% endblock %}
