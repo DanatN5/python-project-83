@@ -50,7 +50,7 @@ def urls_post():
         return redirect(url_for("url_get", id=id))
     flash("Страница уже существует", "info")
     urls.conn.close()
-    return redirect(url_for("url_get", id=url_info.get("id")))
+    return redirect(url_for("url_get", id=url_info.get("id")), code=302)
 
 
 @app.route("/urls/<int:id>")
@@ -100,4 +100,4 @@ def checks_post(id):
     urls.add_url_check(parsed_data)
     flash("Страница успешно проверена", "success")
     urls.conn.close()
-    return redirect(url_for("url_get", id=id))
+    return redirect(url_for("url_get", id=id), code=302)

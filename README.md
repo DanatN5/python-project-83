@@ -5,10 +5,13 @@
 
 [![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=DanatN5_python-project-83&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=DanatN5_python-project-83)
 
-# Анализатор страниц
+## Анализатор страниц
 
 > Веб-приложение для анализа SEO-параметров сайтов
 > Позволяет сохранять URL-адреса, выполнять проверки и собирать информацию о заголовках и метаданных
+
+# Демонстрация проекта
+Приложение доступно по ссылке: [Открыть сайт](https://python-project-83-khwa.onrender.com)
 
 
 ## Установка и запуск:
